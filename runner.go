@@ -115,6 +115,12 @@ func refactorProtoSources(files []*protogen.File) (descs []*FileDescriptor, err 
 	return
 }
 
+const (
+	stripNone = iota
+	stripNested
+	stripAll
+)
+
 func refactorEnumConstants(enums []*protogen.Enum, prefixes ...string) error {
 	if !camelcaseEnumConstants {
 		return nil
@@ -131,21 +137,16 @@ func refactorEnumConstants(enums []*protogen.Enum, prefixes ...string) error {
 
 	for _, enum := range enums {
 		enumType = strings.TrimPrefix(enum.GoIdent.GoName, prefix)
-		stripped := renameEnumType(enum)
+		strip := renameEnumType(enum)
 		for _, value := range enum.Values {
-			if stripped {
-				value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, prefix+"_")
-				value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, enumType+"_")
-			}
-
-			renameEnumValueComment(enum, value, stripped)
+			renameEnumValue(value, prefix, enumType, strip)
 		}
 	}
 
 	return nil
 }
 
-func renameEnumType(enum *protogen.Enum) (stripped bool) {
+func renameEnumType(enum *protogen.Enum) (strip int) {
 	const (
 		stripComment  = "@go.enum=strip"
 		goNameComment = "@go.name="
@@ -163,7 +164,13 @@ func renameEnumType(enum *protogen.Enum) (stripped bool) {
 		}
 
 		if index := strings.Index(line, stripComment); index >= 0 {
-			stripped = true
+			line = line[index+len(stripComment):]
+			if strings.HasPrefix(line, "=nested") {
+				strip = stripNested
+			} else {
+				strip = stripAll
+			}
+
 			continue
 		}
 
@@ -180,8 +187,13 @@ func renameEnumType(enum *protogen.Enum) (stripped bool) {
 
 	trailing := enum.Comments.Trailing.String()
 	if index := strings.Index(trailing, stripComment); index >= 0 {
+		trailing = trailing[index+len(stripComment):]
+		if strings.HasPrefix(trailing, "=nested") {
+			strip = stripNested
+		} else {
+			strip = stripAll
+		}
 		enum.Comments.Trailing = ""
-		stripped = true
 	} else if index := strings.Index(trailing, goNameComment); index >= 0 {
 		enum.Comments.Trailing = ""
 		name = strings.TrimSpace(trailing[index+len(goNameComment):])
@@ -196,7 +208,7 @@ func renameEnumType(enum *protogen.Enum) (stripped bool) {
 	return
 }
 
-func renameEnumValueComment(enum *protogen.Enum, value *protogen.EnumValue, stripped bool) {
+func renameEnumValue(value *protogen.EnumValue, prefix, enum string, strip int) {
 	var (
 		name string
 		buf  bytes.Buffer
@@ -229,18 +241,37 @@ func renameEnumValueComment(enum *protogen.Enum, value *protogen.EnumValue, stri
 		}
 	}
 
-	if stripped {
-		value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, enum.GoIdent.GoName+"_")
+	switch strip {
+	case stripAll:
 		if name != "" {
 			value.GoIdent.GoName = name
 			return
 		}
-		value.GoIdent.GoName = strcase.UpperCamelCase(value.GoIdent.GoName)
-	} else if name != "" {
-		value.GoIdent.GoName = strcase.UpperCamelCase(enum.GoIdent.GoName) + name
-	} else {
-		value.GoIdent.GoName = strcase.UpperCamelCase(value.GoIdent.GoName)
+
+		if prefix != "" {
+			value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, prefix+"_")
+		} else {
+			value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, enum+"_")
+
+		}
+	case stripNested:
+		if name != "" {
+			value.GoIdent.GoName = enum + "_" + name
+		} else {
+			value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, prefix+"_")
+			value.GoIdent.GoName = enum + "_" + value.GoIdent.GoName
+		}
+	default:
+		if name != "" {
+			if prefix != "" {
+				value.GoIdent.GoName = prefix + "_" + name
+			} else {
+				value.GoIdent.GoName = enum + "_" + name
+			}
+		}
 	}
+
+	value.GoIdent.GoName = strcase.UpperCamelCase(value.GoIdent.GoName)
 }
 
 func regenerateGoSources(descs []*FileDescriptor, sources []*pluginpb.CodeGeneratorResponse_File) (err error) {
