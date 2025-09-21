@@ -256,7 +256,8 @@ func renameEnumValue(value *protogen.EnumValue, prefix, enum string, strip int) 
 		}
 	case stripNested:
 		if name != "" {
-			value.GoIdent.GoName = enum + "_" + name
+			value.GoIdent.GoName = strcase.UpperCamelCase(enum) + name
+			return
 		} else {
 			value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, prefix+"_")
 			value.GoIdent.GoName = enum + "_" + value.GoIdent.GoName
@@ -264,10 +265,12 @@ func renameEnumValue(value *protogen.EnumValue, prefix, enum string, strip int) 
 	default:
 		if name != "" {
 			if prefix != "" {
-				value.GoIdent.GoName = prefix + "_" + name
+				value.GoIdent.GoName = strcase.UpperCamelCase(prefix) + name
 			} else {
-				value.GoIdent.GoName = enum + "_" + name
+				value.GoIdent.GoName = strcase.UpperCamelCase(enum) + name
 			}
+
+			return
 		}
 	}
 
