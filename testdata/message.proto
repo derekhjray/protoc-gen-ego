@@ -10,6 +10,11 @@ enum GroupRole {
   VICE_OWNER    = 3;
 }
 
+enum CPU {
+  X86 = 0;
+  ARM = 1;
+}
+
 message dog {
   string name = 1;
   int32 age = 2;

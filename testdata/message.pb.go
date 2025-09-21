@@ -2,16 +2,18 @@
 // versions:
 // 	protoc-gen-go v1.36.7
 // 	protoc        v6.31.1
+// 	protoc        v6.31.1
 // source: testdata/message.proto
 
 package testdata
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -73,102 +75,50 @@ func (GroupRole) EnumDescriptor() ([]byte, []int) {
 	return file_testdata_message_proto_rawDescGZIP(), []int{0}
 }
 
-type MessageState int32
+type Cpu int32
 
 const (
-	MessageStateOffline   MessageState = 0
-	MessageStateOnline    MessageState = 1
-	MessageStateInvisible MessageState = 2
+	CpuCpuX86 Cpu = 0
+	CpuCpuArm Cpu = 1
 )
 
-// Enum value maps for MessageState.
+// Enum value maps for Cpu.
 var (
-	MessageState_name = map[int32]string{
-		0: "OFFLINE",
-		1: "ONLINE",
-		2: "INVISIBLE",
+	Cpu_name = map[int32]string{
+		0: "X86",
+		1: "ARM",
 	}
-	MessageState_value = map[string]int32{
-		"OFFLINE":   0,
-		"ONLINE":    1,
-		"INVISIBLE": 2,
+	Cpu_value = map[string]int32{
+		"X86": 0,
+		"ARM": 1,
 	}
 )
 
-func (x MessageState) Enum() *MessageState {
-	p := new(MessageState)
+func (x Cpu) Enum() *Cpu {
+	p := new(Cpu)
 	*p = x
 	return p
 }
 
-func (x MessageState) String() string {
+func (x Cpu) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (MessageState) Descriptor() protoreflect.EnumDescriptor {
+func (Cpu) Descriptor() protoreflect.EnumDescriptor {
 	return file_testdata_message_proto_enumTypes[1].Descriptor()
 }
 
-func (MessageState) Type() protoreflect.EnumType {
+func (Cpu) Type() protoreflect.EnumType {
 	return &file_testdata_message_proto_enumTypes[1]
 }
 
-func (x MessageState) Number() protoreflect.EnumNumber {
+func (x Cpu) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use MessageState.Descriptor instead.
-func (MessageState) EnumDescriptor() ([]byte, []int) {
-	return file_testdata_message_proto_rawDescGZIP(), []int{2, 0}
-}
-
-type MessageManGender int32
-
-const (
-	MessageManGenderUnspecific MessageManGender = 0
-	MessageManGenderMale       MessageManGender = 1
-	MessageManGenderFemale     MessageManGender = 2
-)
-
-// Enum value maps for MessageManGender.
-var (
-	MessageManGender_name = map[int32]string{
-		0: "UNSPECIFIC",
-		1: "MALE",
-		2: "FEMALE",
-	}
-	MessageManGender_value = map[string]int32{
-		"UNSPECIFIC": 0,
-		"MALE":       1,
-		"FEMALE":     2,
-	}
-)
-
-func (x MessageManGender) Enum() *MessageManGender {
-	p := new(MessageManGender)
-	*p = x
-	return p
-}
-
-func (x MessageManGender) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (MessageManGender) Descriptor() protoreflect.EnumDescriptor {
-	return file_testdata_message_proto_enumTypes[2].Descriptor()
-}
-
-func (MessageManGender) Type() protoreflect.EnumType {
-	return &file_testdata_message_proto_enumTypes[2]
-}
-
-func (x MessageManGender) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use MessageManGender.Descriptor instead.
-func (MessageManGender) EnumDescriptor() ([]byte, []int) {
-	return file_testdata_message_proto_rawDescGZIP(), []int{2, 0, 0}
+// Deprecated: Use Cpu.Descriptor instead.
+func (Cpu) EnumDescriptor() ([]byte, []int) {
+	return file_testdata_message_proto_rawDescGZIP(), []int{1}
 }
 
 type Dog struct {
@@ -657,7 +607,10 @@ const file_testdata_message_proto_rawDesc = "" +
 	"\aCREATOR\x10\x01\x12\x11\n" +
 	"\rADMINISTRATOR\x10\x02\x12\x0e\n" +
 	"\n" +
-	"VICE_OWNER\x10\x03B\fZ\n" +
+	"VICE_OWNER\x10\x03*\x17\n" +
+	"\x03CPU\x12\a\n" +
+	"\x03X86\x10\x00\x12\a\n" +
+	"\x03ARM\x10\x01B\fZ\n" +
 	"./testdatab\x06proto3"
 
 var (
@@ -672,21 +625,20 @@ func file_testdata_message_proto_rawDescGZIP() []byte {
 	return file_testdata_message_proto_rawDescData
 }
 
-var file_testdata_message_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_testdata_message_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_testdata_message_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_testdata_message_proto_goTypes = []any{
-	(GroupRole)(0),        // 0: testdata.GroupRole
-	(MessageState)(0),     // 1: testdata.message.State
-	(MessageManGender)(0), // 2: testdata.message.man.Gender
-	(*Dog)(nil),           // 3: testdata.dog
-	(*Cat)(nil),           // 4: testdata.cat
-	(*Message)(nil),       // 5: testdata.message
-	(*MessageMan)(nil),    // 6: testdata.message.man
+	(GroupRole)(0),     // 0: testdata.GroupRole
+	(Cpu)(0),           // 1: testdata.CPU
+	(*Dog)(nil),        // 2: testdata.dog
+	(*Cat)(nil),        // 3: testdata.cat
+	(*Message)(nil),    // 4: testdata.message
+	(*MessageMan)(nil), // 5: testdata.message.man
 }
 var file_testdata_message_proto_depIdxs = []int32{
-	6, // 0: testdata.message.from:type_name -> testdata.message.man
-	3, // 1: testdata.message.dog:type_name -> testdata.dog
-	4, // 2: testdata.message.cat:type_name -> testdata.cat
+	5, // 0: testdata.message.from:type_name -> testdata.message.man
+	2, // 1: testdata.message.dog:type_name -> testdata.dog
+	3, // 2: testdata.message.cat:type_name -> testdata.cat
 	0, // 3: testdata.message.role:type_name -> testdata.GroupRole
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
@@ -709,7 +661,7 @@ func file_testdata_message_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_testdata_message_proto_rawDesc), len(file_testdata_message_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      2,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
