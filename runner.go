@@ -120,14 +120,26 @@ func refactorEnumConstants(enums []*protogen.Enum, prefixes ...string) error {
 		return nil
 	}
 
-	var prefix string
+	var (
+		prefix   string
+		enumType string
+	)
+
 	if len(prefixes) > 0 {
 		prefix = prefixes[0]
 	}
 
 	for _, enum := range enums {
-		stripped := parseEnumTypeComment(enum)
+		enumType = strings.TrimPrefix(enum.GoIdent.GoName, prefix)
+		stripped := renameEnumType(enum)
 		for _, value := range enum.Values {
+			value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, prefix+"_")
+			if stripped {
+				value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, enumType+"_")
+			} else if !strings.HasPrefix(value.GoIdent.GoName, enumType) {
+				value.GoIdent.GoName = enumType + value.GoIdent.GoName
+			}
+
 			renameEnumValueComment(enum, value, stripped)
 		}
 	}
@@ -135,8 +147,14 @@ func refactorEnumConstants(enums []*protogen.Enum, prefixes ...string) error {
 	return nil
 }
 
-func parseEnumTypeComment(enum *protogen.Enum) (stripped bool) {
-	const stripComment = "@go.enum=strip"
+func renameEnumType(enum *protogen.Enum) (stripped bool) {
+	const (
+		stripComment  = "@go.enum=strip"
+		goNameComment = "@go.name="
+	)
+
+	var name string
+
 	leading := enum.Comments.Leading.String()
 	var buf bytes.Buffer
 	scanner := bufio.NewScanner(strings.NewReader(leading))
@@ -146,11 +164,14 @@ func parseEnumTypeComment(enum *protogen.Enum) (stripped bool) {
 			continue
 		}
 
-		if !stripped {
-			if index := strings.Index(line, stripComment); index >= 0 {
-				stripped = true
-				continue
-			}
+		if index := strings.Index(line, stripComment); index >= 0 {
+			stripped = true
+			continue
+		}
+
+		if index := strings.Index(line, goNameComment); index >= 0 {
+			name = strings.TrimSpace(line[index+len(goNameComment):])
+			continue
 		}
 
 		buf.WriteString(line)
@@ -163,6 +184,15 @@ func parseEnumTypeComment(enum *protogen.Enum) (stripped bool) {
 	if index := strings.Index(trailing, stripComment); index >= 0 {
 		enum.Comments.Trailing = ""
 		stripped = true
+	} else if index := strings.Index(trailing, goNameComment); index >= 0 {
+		enum.Comments.Trailing = ""
+		name = strings.TrimSpace(trailing[index+len(goNameComment):])
+	}
+
+	if name != "" {
+		enum.GoIdent.GoName = name
+	} else {
+		enum.GoIdent.GoName = strcase.UpperCamelCase(enum.GoIdent.GoName)
 	}
 
 	return
