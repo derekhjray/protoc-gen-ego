@@ -12,7 +12,21 @@ enum GroupRole {
 
 enum CPU {
   X86 = 0;
-  ARM = 1;
+  ARM = 1; // @go.name=Arm
+}
+
+/**
+ * @go.enum=strip
+ * @bson.tag=os
+ */
+
+ // test1
+// @go.enum=strip
+// test2
+enum OS {
+  HARMONY = 0; 
+  IOS = 1;/* @go.name=IOS */
+  ANDROID = 2;
 }
 
 message dog {

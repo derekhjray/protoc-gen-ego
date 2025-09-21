@@ -75,50 +75,101 @@ func (GroupRole) EnumDescriptor() ([]byte, []int) {
 	return file_testdata_message_proto_rawDescGZIP(), []int{0}
 }
 
-type Cpu int32
+type CPU int32
 
 const (
-	CpuCpuX86 Cpu = 0
-	CpuCpuArm Cpu = 1
+	CpuX86 CPU = 0
+	CpuArm CPU = 1
 )
 
-// Enum value maps for Cpu.
+// Enum value maps for CPU.
 var (
-	Cpu_name = map[int32]string{
+	CPU_name = map[int32]string{
 		0: "X86",
 		1: "ARM",
 	}
-	Cpu_value = map[string]int32{
+	CPU_value = map[string]int32{
 		"X86": 0,
 		"ARM": 1,
 	}
 )
 
-func (x Cpu) Enum() *Cpu {
-	p := new(Cpu)
+func (x CPU) Enum() *CPU {
+	p := new(CPU)
 	*p = x
 	return p
 }
 
-func (x Cpu) String() string {
+func (x CPU) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Cpu) Descriptor() protoreflect.EnumDescriptor {
+func (CPU) Descriptor() protoreflect.EnumDescriptor {
 	return file_testdata_message_proto_enumTypes[1].Descriptor()
 }
 
-func (Cpu) Type() protoreflect.EnumType {
+func (CPU) Type() protoreflect.EnumType {
 	return &file_testdata_message_proto_enumTypes[1]
 }
 
-func (x Cpu) Number() protoreflect.EnumNumber {
+func (x CPU) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Cpu.Descriptor instead.
-func (Cpu) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use CPU.Descriptor instead.
+func (CPU) EnumDescriptor() ([]byte, []int) {
 	return file_testdata_message_proto_rawDescGZIP(), []int{1}
+}
+
+// // test1
+// // test2
+type OS int32
+
+const (
+	Harmony OS = 0
+	IOS     OS = 1
+	Android OS = 2
+)
+
+// Enum value maps for OS.
+var (
+	OS_name = map[int32]string{
+		0: "HARMONY",
+		1: "IOS",
+		2: "ANDROID",
+	}
+	OS_value = map[string]int32{
+		"HARMONY": 0,
+		"IOS":     1,
+		"ANDROID": 2,
+	}
+)
+
+func (x OS) Enum() *OS {
+	p := new(OS)
+	*p = x
+	return p
+}
+
+func (x OS) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (OS) Descriptor() protoreflect.EnumDescriptor {
+	return file_testdata_message_proto_enumTypes[2].Descriptor()
+}
+
+func (OS) Type() protoreflect.EnumType {
+	return &file_testdata_message_proto_enumTypes[2]
+}
+
+func (x OS) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use OS.Descriptor instead.
+func (OS) EnumDescriptor() ([]byte, []int) {
+	return file_testdata_message_proto_rawDescGZIP(), []int{2}
 }
 
 type Dog struct {
@@ -610,7 +661,11 @@ const file_testdata_message_proto_rawDesc = "" +
 	"VICE_OWNER\x10\x03*\x17\n" +
 	"\x03CPU\x12\a\n" +
 	"\x03X86\x10\x00\x12\a\n" +
-	"\x03ARM\x10\x01B\fZ\n" +
+	"\x03ARM\x10\x01*'\n" +
+	"\x02OS\x12\v\n" +
+	"\aHARMONY\x10\x00\x12\a\n" +
+	"\x03IOS\x10\x01\x12\v\n" +
+	"\aANDROID\x10\x02B\fZ\n" +
 	"./testdatab\x06proto3"
 
 var (
@@ -625,20 +680,21 @@ func file_testdata_message_proto_rawDescGZIP() []byte {
 	return file_testdata_message_proto_rawDescData
 }
 
-var file_testdata_message_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_testdata_message_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_testdata_message_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_testdata_message_proto_goTypes = []any{
 	(GroupRole)(0),     // 0: testdata.GroupRole
-	(Cpu)(0),           // 1: testdata.CPU
-	(*Dog)(nil),        // 2: testdata.dog
-	(*Cat)(nil),        // 3: testdata.cat
-	(*Message)(nil),    // 4: testdata.message
-	(*MessageMan)(nil), // 5: testdata.message.man
+	(CPU)(0),           // 1: testdata.CPU
+	(OS)(0),            // 2: testdata.OS
+	(*Dog)(nil),        // 3: testdata.dog
+	(*Cat)(nil),        // 4: testdata.cat
+	(*Message)(nil),    // 5: testdata.message
+	(*MessageMan)(nil), // 6: testdata.message.man
 }
 var file_testdata_message_proto_depIdxs = []int32{
-	5, // 0: testdata.message.from:type_name -> testdata.message.man
-	2, // 1: testdata.message.dog:type_name -> testdata.dog
-	3, // 2: testdata.message.cat:type_name -> testdata.cat
+	6, // 0: testdata.message.from:type_name -> testdata.message.man
+	3, // 1: testdata.message.dog:type_name -> testdata.dog
+	4, // 2: testdata.message.cat:type_name -> testdata.cat
 	0, // 3: testdata.message.role:type_name -> testdata.GroupRole
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
@@ -661,7 +717,7 @@ func file_testdata_message_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_testdata_message_proto_rawDesc), len(file_testdata_message_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      3,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
