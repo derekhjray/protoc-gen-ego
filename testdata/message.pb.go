@@ -173,9 +173,9 @@ func (OS) EnumDescriptor() ([]byte, []int) {
 type MessageState int32
 
 const (
-	StateOffline   MessageState = 0
-	StateOnline    MessageState = 1
-	StateInvisible MessageState = 2
+	Offline   MessageState = 0
+	Online    MessageState = 1
+	Invisible MessageState = 2
 )
 
 // Enum value maps for MessageState.
@@ -222,9 +222,9 @@ func (MessageState) EnumDescriptor() ([]byte, []int) {
 type MessageManGender int32
 
 const (
-	Unspecific MessageManGender = 0
-	Male       MessageManGender = 1
-	Female     MessageManGender = 2
+	MessageManUnspecific MessageManGender = 0
+	MessageManMale       MessageManGender = 1
+	MessageManFemale     MessageManGender = 2
 )
 
 // Enum value maps for MessageManGender.

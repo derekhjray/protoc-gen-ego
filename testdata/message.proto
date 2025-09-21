@@ -96,6 +96,7 @@ message message {
 
   GroupRole role = 24;
 
+  // @go.enum=strip
   enum State {
     OFFLINE   = 0;
     ONLINE    = 1;
