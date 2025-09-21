@@ -96,10 +96,16 @@ message message {
 
   GroupRole role = 24;
 
-  // @go.enum=strip
+  // @go.enum=strip=nested
   enum State {
     OFFLINE   = 0;
-    ONLINE    = 1;
+    ONLINE    = 1; // @go.name=Online
     INVISIBLE = 2;
+  }
+
+  enum City {
+    BEIJING = 0;
+    SHANGHAI = 1; // @go.name=Shanghai
+    GUANGZHOU = 2;
   }
 }
