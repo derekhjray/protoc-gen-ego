@@ -133,11 +133,9 @@ func refactorEnumConstants(enums []*protogen.Enum, prefixes ...string) error {
 		enumType = strings.TrimPrefix(enum.GoIdent.GoName, prefix)
 		stripped := renameEnumType(enum)
 		for _, value := range enum.Values {
-			value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, prefix+"_")
 			if stripped {
+				value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, prefix+"_")
 				value.GoIdent.GoName = strings.TrimPrefix(value.GoIdent.GoName, enumType+"_")
-			} else if !strings.HasPrefix(value.GoIdent.GoName, enumType) {
-				value.GoIdent.GoName = enumType + value.GoIdent.GoName
 			}
 
 			renameEnumValueComment(enum, value, stripped)
